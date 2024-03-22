@@ -1,0 +1,50 @@
+*{
+  margin: 0;
+  box-sizing: content-box;
+}
+.allContent{
+  inline-size: 100vi;
+  min-block-size: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+h1{
+  text-align: center;
+  padding: 0.5rem 0;
+  color: midnightblue;
+}
+.calcPlate{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  inline-size: 25rem;
+  border: thick solid black;
+}
+.calcWindow{
+  flex: 0 0 7.5rem;
+  block-size: 7.5rem;
+  margin: 0.3125rem;
+  border: medium solid darkblue;
+}
+.buttonBlock{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 0.3125rem;
+  outline: thin solid black;
+}
+.buttonUnit{
+  box-sizing: border-box;
+  inline-size: 6rem;
+  block-size: 4rem;
+  font-size: 1.5rem;
+  font-weight: bolder;
+}
+.buttonUnit:first-child{
+  inline-size: 12rem;
+  flex-grow: 1;
+}
