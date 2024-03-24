@@ -14,37 +14,50 @@ h1{
   text-align: center;
   padding: 0.5rem 0;
   color: midnightblue;
+  caret-color: transparent;
 }
 .calcPlate{
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
-  inline-size: 25rem;
+  align-items: center;
+  inline-size: 29rem;
   border: thick solid black;
 }
 .calcWindow{
-  flex: 0 0 7.5rem;
-  block-size: 7.5rem;
-  margin: 0.3125rem;
+  flex: 0 0 4rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  align-items: center;
+  inline-size: 27.5rem;
+  block-size: 4rem;
+  padding: 0.3125rem;
+  overflow-x: hidden;
   border: medium solid darkblue;
+}
+.calcLine{
+  font-family: monospace;
+  font-size: 2rem;
+  caret-color: transparent;
 }
 .buttonBlock{
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 2px;
+  gap: calc(1rem/8);
   padding: 0.3125rem;
-  outline: thin solid black;
 }
 .buttonUnit{
   box-sizing: border-box;
-  inline-size: 6rem;
+  inline-size: calc(28rem/4);
   block-size: 4rem;
   font-size: 1.5rem;
   font-weight: bolder;
+  caret-color: transparent;
 }
 .buttonUnit:first-child{
-  inline-size: 12rem;
+  inline-size: calc(28rem/2);
   flex-grow: 1;
 }
