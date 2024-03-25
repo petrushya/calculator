@@ -2,20 +2,18 @@ const buttonBlock = document.querySelector('.buttonBlock');
 const calcLine = document.querySelector('.calcLine');
 const trouble = document.querySelector('.trouble');
 
-function getSum (resultArg, varArg) {return resultArg + varArg};
-function getDiff (resultArg, varArg) {return resultArg - varArg};
-function getMultipl (resultArg, varArg) {return resultArg * varArg};
-function getQuot (resultArg, varArg) {return resultArg / varArg};
-
 let arrInput = [];
 let operand = '';
-let resSum = null;
-let variable;
+let result = null;
+let variable = null;
+
+const operators = ['add', 'subtract', 'multiply', 'divide'];
+const operands = ['sum', 'diff', 'mult', 'divd'];
 
 buttonBlock.addEventListener('click', (event) => {
   let target = event.target;
-
   trouble.textContent = '';
+
   if(Number.isInteger(+target.value)){
     if(target.value === '0'){
       if((arrInput.length === 0 || (arrInput.length === 1 && arrInput[0] === '-')) || (arrInput.includes('.') && arrInput.length < 21) || (!arrInput.includes('.') && arrInput[0] !== '0')) arrInput.push(target.value);
@@ -50,8 +48,9 @@ buttonBlock.addEventListener('click', (event) => {
     if(arrInput.length > 0) arrInput.pop();
   };
 
+  variable = parseFloat(arrInput.join(''));
+  
   if(arrInput.length > 0){
-    variable = parseFloat(arrInput.join(''));
     if(arrInput.length > 18 || (arrInput.includes('.') && arrInput.length === variable.length)){
       calcLine.textContent = variable;
       }else{
@@ -61,23 +60,55 @@ buttonBlock.addEventListener('click', (event) => {
     calcLine.textContent = arrInput.join('');
   };
 
-
-  if(target.value === 'add'){
+  if(operators.includes(target.value)){
     if(arrInput.length === 0 || !variable){
       trouble.textContent = 'variable not inserted or invalid';
       calcLine.textContent = '';
-    }else if(operand === 'sum'){
+    }else if(operand){
+      if(operand === 'sum')	result = result + variable;
+      if(operand === 'diff') result = result - variable;
+      if(operand === 'mult') result = result * variable;
+      if(operand === 'divd')	result = result / variable;
+      switch(operands[operators.indexOf(target.value)]){
+        case 'sum':
+          operand = 'sum';
+          calcLine.textContent = `${result} +`;
+          break;
+        case 'diff':
+          operand = 'diff';
+          calcLine.textContent = `${result} -`;
+          break;
+        case 'mult':
+          operand = 'mult';
+          calcLine.textContent = `${result} *`;
+          break;
+        default:
+          calcLine.textContent = `${result} /`;
+        	operand = 'divd';
+    	};
       trouble.textContent = '';
-    	resSum = getSum(resSum, variable);
-      calcLine.textContent = `${resSum} +`;
       arrInput = [];
-      operand = 'sum';
     }else{
+      result = variable;
+      switch(operands[operators.indexOf(target.value)]){
+        case 'sum':
+          operand = 'sum';
+          calcLine.textContent = `${result} +`;
+          break;
+        case 'diff':
+          operand = 'diff';
+          calcLine.textContent = `${result} -`;
+          break;
+        case 'mult':
+          operand = 'mult';
+          calcLine.textContent = `${result} *`;
+          break;
+        default:
+          operand = 'divd';
+          calcLine.textContent = `${result} /`;
+      };
       trouble.textContent = '';
-      resSum = variable;
-      calcLine.textContent = `${resSum} +`;
       arrInput = [];
-      operand = 'sum';
     };
   };
   
@@ -85,21 +116,27 @@ buttonBlock.addEventListener('click', (event) => {
     if(arrInput.length === 0 || !variable){
       trouble.textContent = 'variable not inserted or invalid';
       calcLine.textContent = '';
-    }else if(operand === 'sum'){
+    }else if(operand){
+      if(operand === 'sum')	result = result + variable;
+      if(operand === 'diff') result = result - variable;
+      if(operand === 'mult') result = result * variable;
+      if(operand === 'divd')	result = result / variable;
       trouble.textContent = '';
-    	resSum = getSum(resSum, variable);
-      sessionStorage.setItem('result', resSum);
-      calcLine.textContent = `${resSum}`;
-      arrInput = `${resSum}`.split('');
-      variable = resSum;
+      calcLine.textContent = `${result}`;
+      arrInput = `${result}`.split('');
+      variable = result;
       operand = '';
     };
   };
 
-  console.log(`arrInput - ${arrInput}`);
-  console.log(`variable - ${variable}`);
-  console.log(`operand - ${operand}`);
-  console.log(`resSum - ${resSum}`);
+  if(target.value === 'clear'){
+    arrInput = [];
+    result = null;
+    variable = null;
+    operand = '';
+    calcLine.textContent = '';
+    trouble.textContent = '';
+  };
 });
 
 
