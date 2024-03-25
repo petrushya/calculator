@@ -21,43 +21,46 @@ h1{
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: center;
-  inline-size: 29rem;
+  inline-size: 32rem;
   border: thick solid black;
 }
 .calcWindow{
   flex: 0 0 4rem;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column wrap;
   justify-content: flex-end;
-  align-items: center;
-  inline-size: 27.5rem;
+  align-items: end;
+  inline-size: 30.5rem;
   block-size: 4rem;
   padding: 0.3125rem;
   overflow-x: hidden;
   border: medium solid darkblue;
 }
+.trouble{
+  font-size: 1rem;
+}
 .calcLine{
   font-family: monospace;
   font-size: 2rem;
-  caret-color: transparent;
+  block-size: 1lh;
 }
 .buttonBlock{
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: start;
   gap: calc(1rem/8);
   padding: 0.3125rem;
 }
 .buttonUnit{
   box-sizing: border-box;
-  inline-size: calc(28rem/4);
+  inline-size: calc(31rem/4);
   block-size: 4rem;
   font-size: 1.5rem;
   font-weight: bolder;
   caret-color: transparent;
 }
 .buttonUnit:first-child{
-  inline-size: calc(28rem/2);
+  inline-size: calc(31rem/2);
   flex-grow: 1;
 }
