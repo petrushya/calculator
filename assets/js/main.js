@@ -1,34 +1,46 @@
+
 const buttonBlock = document.querySelector('.buttonBlock');
-const calcLine = document.querySelector('.calcLine');
+const calcLine = document.querySelector('.calcLine p');
 const trouble = document.querySelector('.trouble');
+const span = document.querySelector('.calcLine span');
 
 let arrInput = [];
 let operand = '';
-let result = null;
-let variable = null;
+let result = 0;
+let variable = 0;
+let sign = '';
+const operations = {add: {operand: 'sum', sign: '+'},
+                    subtract: {operand: 'diff', sign: '-'},
+                    multiply: {operand: 'mult', sign: '*'},
+                    divide: {operand: 'divd', sign: '/'}
+                   };
 
-const operators = ['add', 'subtract', 'multiply', 'divide'];
-const operands = ['sum', 'diff', 'mult', 'divd'];
+calcLine.textContent = '0';
 
 buttonBlock.addEventListener('click', (event) => {
-  let target = event.target;
-  trouble.textContent = '';
 
+  let target = event.target;
   if(Number.isInteger(+target.value)){
+    span.setAttribute('style', 'color:#00000050;');
+    if(operand === 'divd' && arrInput.length === 0 && target.value === '0') {
+      trouble.textContent = 'You can\'t divide by "0" ';
+    }else{
+      trouble.textContent = '';
+    };
     if(target.value === '0'){
-      if((arrInput.length === 0 || (arrInput.length === 1 && arrInput[0] === '-')) || (arrInput.includes('.') && arrInput.length < 21) || (!arrInput.includes('.') && arrInput[0] !== '0')) arrInput.push(target.value);
-    }else if(target.value !== '0'){
-      if((arrInput[0] === '0' && arrInput.length === 1) || (arrInput.length === 2 && arrInput.join('').includes('-0'))){
+      if((arrInput.length === 0 || arrInput.join('') === '-') || (arrInput.includes('.') && arrInput.length < 21) || (!arrInput.includes('.') && arrInput[0] !== '0')) arrInput.push(target.value);
+    }else{
+      if((arrInput[0] === '0' && arrInput.length === 1) || (arrInput.length === 2 && arrInput.join('') === '-0')){
         arrInput.pop();
         arrInput.push(target.value);
-      }else if((arrInput.includes('.') && arrInput.length < 19) || (!arrInput.includes('.'))){
+      }else if((arrInput.includes('.') && arrInput.length < 19) || !arrInput.includes('.')){
         arrInput.push(target.value);
       };
     };
   };
 
   if(target.value === 'dot') {
-    if(arrInput.length === 0 || arrInput.join('') === '-'){
+    if(arrInput.length === 0 || arrInput.length === 1 && arrInput[0] === '-'){
       arrInput.push('0');
       arrInput.push('.');
     }else if(!arrInput.includes('.')){
@@ -49,102 +61,63 @@ buttonBlock.addEventListener('click', (event) => {
   };
 
   variable = parseFloat(arrInput.join(''));
-  
-  if(arrInput.length > 0){
-    if(arrInput.length > 18 || (arrInput.includes('.') && arrInput.length === variable.length)){
-      calcLine.textContent = variable;
-      }else{
-      calcLine.textContent = arrInput.join('');
-    };
+
+  if(arrInput.length > 18 || (arrInput.includes('.') && arrInput.length === variable.length)){
+    calcLine.textContent = variable;
+  }else if(arrInput.length === 0){
+    calcLine.textContent = '0';
+    if(operand === 'divd') trouble.textContent = 'You can\'t divide by "0" ';
+  }else if(arrInput.join('') === '-'){
+    arrInput.push('0');
+    calcLine.textContent = arrInput.join('');
+    variable = parseFloat(arrInput.join(''));
+    if(operand === 'divd') trouble.textContent = 'You can\'t divide by "0" ';
   }else{
     calcLine.textContent = arrInput.join('');
   };
 
-  if(operators.includes(target.value)){
-    if(arrInput.length === 0 || !variable){
-      trouble.textContent = 'variable not inserted or invalid';
-      calcLine.textContent = '';
-    }else if(operand){
-      if(operand === 'sum')	result = result + variable;
+  if(Object.keys(operations).includes(target.value)){
+    span.setAttribute('style', 'color:#000000;');
+    sign = operations[target.value]['sign'];
+    if(arrInput.length === 0) variable = result;
+    if(operand !== ''){
+      if(operand === 'sum') result = result + variable;
       if(operand === 'diff') result = result - variable;
       if(operand === 'mult') result = result * variable;
-      if(operand === 'divd')	result = result / variable;
-      switch(operands[operators.indexOf(target.value)]){
-        case 'sum':
-          operand = 'sum';
-          calcLine.textContent = `${result} +`;
-          break;
-        case 'diff':
-          operand = 'diff';
-          calcLine.textContent = `${result} -`;
-          break;
-        case 'mult':
-          operand = 'mult';
-          calcLine.textContent = `${result} *`;
-          break;
-        default:
-          calcLine.textContent = `${result} /`;
-        	operand = 'divd';
-    	};
-      trouble.textContent = '';
+      if(operand === 'divd') result = result / variable;
+      calcLine.textContent = result;
+      span.textContent = sign;
+      operand = operations[target.value]['operand'];
       arrInput = [];
     }else{
       result = variable;
-      switch(operands[operators.indexOf(target.value)]){
-        case 'sum':
-          operand = 'sum';
-          calcLine.textContent = `${result} +`;
-          break;
-        case 'diff':
-          operand = 'diff';
-          calcLine.textContent = `${result} -`;
-          break;
-        case 'mult':
-          operand = 'mult';
-          calcLine.textContent = `${result} *`;
-          break;
-        default:
-          operand = 'divd';
-          calcLine.textContent = `${result} /`;
-      };
-      trouble.textContent = '';
+      calcLine.textContent = result;
+      span.textContent = sign;
+      operand = operations[target.value]['operand'];
       arrInput = [];
     };
   };
-  
+
   if(target.value === 'equals'){
-    if(arrInput.length === 0 || !variable){
-      trouble.textContent = 'variable not inserted or invalid';
-      calcLine.textContent = '';
-    }else if(operand){
-      if(operand === 'sum')	result = result + variable;
-      if(operand === 'diff') result = result - variable;
-      if(operand === 'mult') result = result * variable;
-      if(operand === 'divd')	result = result / variable;
-      trouble.textContent = '';
-      calcLine.textContent = `${result}`;
-      arrInput = `${result}`.split('');
-      variable = result;
-      operand = '';
-    };
+    if(arrInput.length === 0) variable = result;
+    if(operand === 'sum') result = result + variable;
+    if(operand === 'diff') result = result - variable;
+    if(operand === 'mult') result = result * variable;
+    if(operand === 'divd') result = result / variable;
+    calcLine.textContent = result;
+    span.textContent = '';
+    operand = '';
+    arrInput = [];
   };
 
   if(target.value === 'clear'){
     arrInput = [];
-    result = null;
-    variable = null;
+    result = 0;
+    variable = 0;
     operand = '';
-    calcLine.textContent = '';
+    sign = '';
+    calcLine.textContent = '0';
     trouble.textContent = '';
+    span.textContent = '';
   };
 });
-
-
-
-
-
-
-
-
-
-
