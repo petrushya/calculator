@@ -15,8 +15,6 @@ const operations = {add: {operand: 'sum', sign: '+'},
                     divide: {operand: 'divd', sign: '/'}
                    };
 
-calcLine.textContent = '0';
-
 buttonBlock.addEventListener('click', (event) => {
 
   let target = event.target;
@@ -28,7 +26,7 @@ buttonBlock.addEventListener('click', (event) => {
       trouble.textContent = '';
     };
     if(target.value === '0'){
-      if((arrInput.length === 0 || arrInput.join('') === '-') || (arrInput.includes('.') && arrInput.length < 21) || (!arrInput.includes('.') && arrInput[0] !== '0')) arrInput.push(target.value);
+      if((((arrInput.length === 0 && arrInput.join('') !== '0') || (arrInput.join('') === '-' && arrInput.join('') !== '-0')) || (arrInput.includes('.') && arrInput.length < 21) || arrInput[0] !== '0') && (arrInput.join('') !== '-0')) arrInput.push(target.value);
     }else{
       if((arrInput[0] === '0' && arrInput.length === 1) || (arrInput.length === 2 && arrInput.join('') === '-0')){
         arrInput.pop();
@@ -64,23 +62,16 @@ buttonBlock.addEventListener('click', (event) => {
 
   if(arrInput.length > 18 || (arrInput.includes('.') && arrInput.length === variable.length)){
     calcLine.textContent = variable;
-  }else if(arrInput.length === 0){
-    calcLine.textContent = '0';
-    if(operand === 'divd') trouble.textContent = 'You can\'t divide by "0" ';
-  }else if(arrInput.join('') === '-'){
-    arrInput.push('0');
-    calcLine.textContent = arrInput.join('');
-    variable = parseFloat(arrInput.join(''));
-    if(operand === 'divd') trouble.textContent = 'You can\'t divide by "0" ';
   }else{
     calcLine.textContent = arrInput.join('');
   };
 
   if(Object.keys(operations).includes(target.value)){
+    trouble.textContent = '';
     span.setAttribute('style', 'color:#000000;');
     sign = operations[target.value]['sign'];
     if(arrInput.length === 0) variable = result;
-    if(operand !== ''){
+    if(operand){
       if(operand === 'sum') result = result + variable;
       if(operand === 'diff') result = result - variable;
       if(operand === 'mult') result = result * variable;
@@ -99,6 +90,7 @@ buttonBlock.addEventListener('click', (event) => {
   };
 
   if(target.value === 'equals'){
+    trouble.textContent = '';
     if(arrInput.length === 0) variable = result;
     if(operand === 'sum') result = result + variable;
     if(operand === 'diff') result = result - variable;
@@ -116,7 +108,7 @@ buttonBlock.addEventListener('click', (event) => {
     variable = 0;
     operand = '';
     sign = '';
-    calcLine.textContent = '0';
+    calcLine.textContent = '';
     trouble.textContent = '';
     span.textContent = '';
   };
