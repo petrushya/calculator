@@ -15,29 +15,27 @@ const operations = {add: {operand: 'sum', sign: '+'},
                     divide: {operand: 'divd', sign: '/'}
                    };
 
-buttonBlock.addEventListener('click', (event) => {
-
-  let target = event.target;
-  if(Number.isInteger(+target.value)){
+function calculate(putValue) {
+  if(Number.isInteger(+putValue)){
     span.setAttribute('style', 'color:#00000050;');
-    if(operand === 'divd' && arrInput.length === 0 && target.value === '0') {
+    if(operand === 'divd' && arrInput.length === 0 && putValue === '0') {
       trouble.textContent = 'You can\'t divide by "0" ';
     }else{
       trouble.textContent = '';
     };
-    if(target.value === '0'){
-      if((((arrInput.length === 0 && arrInput.join('') !== '0') || (arrInput.join('') === '-' && arrInput.join('') !== '-0')) || (arrInput.includes('.') && arrInput.length < 21) || arrInput[0] !== '0') && (arrInput.join('') !== '-0')) arrInput.push(target.value);
+    if(putValue === '0'){
+      if((((arrInput.length === 0 && arrInput.join('') !== '0') || (arrInput.join('') === '-' && arrInput.join('') !== '-0')) || (arrInput.includes('.') && arrInput.length < 21) || arrInput[0] !== '0') && (arrInput.join('') !== '-0')) arrInput.push(putValue);
     }else{
       if((arrInput[0] === '0' && arrInput.length === 1) || (arrInput.length === 2 && arrInput.join('') === '-0')){
         arrInput.pop();
-        arrInput.push(target.value);
+        arrInput.push(putValue);
       }else if((arrInput.includes('.') && arrInput.length < 19) || !arrInput.includes('.')){
-        arrInput.push(target.value);
+        arrInput.push(putValue);
       };
     };
   };
 
-  if(target.value === 'dot') {
+  if(putValue === 'dot') {
     if(arrInput.length === 0 || arrInput.length === 1 && arrInput[0] === '-'){
       arrInput.push('0');
       arrInput.push('.');
@@ -46,7 +44,7 @@ buttonBlock.addEventListener('click', (event) => {
     };
   };
 
-  if(target.value === 'mark'){
+  if(putValue === 'mark'){
     if((arrInput[0] !== '-')){
       arrInput.unshift('-');
     }else if((arrInput[0] === '-')){
@@ -54,9 +52,7 @@ buttonBlock.addEventListener('click', (event) => {
     };
   };
 
-  if(target.value === 'backspase'){
-    if(arrInput.length > 0) arrInput.pop();
-  };
+  if(putValue === 'Backspace') arrInput.pop();
 
   variable = parseFloat(arrInput.join(''));
 
@@ -66,10 +62,10 @@ buttonBlock.addEventListener('click', (event) => {
     calcLine.textContent = arrInput.join('');
   };
 
-  if(Object.keys(operations).includes(target.value)){
+  if(Object.keys(operations).includes(putValue)){
     trouble.textContent = '';
-    span.setAttribute('style', 'color:#000000;');
-    sign = operations[target.value]['sign'];
+    span.removeAttribute('style');
+    sign = operations[putValue]['sign'];
     if(arrInput.length === 0) variable = result;
     if(operand){
       if(operand === 'sum') result = result + variable;
@@ -78,18 +74,18 @@ buttonBlock.addEventListener('click', (event) => {
       if(operand === 'divd') result = result / variable;
       calcLine.textContent = result;
       span.textContent = sign;
-      operand = operations[target.value]['operand'];
+      operand = operations[putValue]['operand'];
       arrInput = [];
     }else{
       result = variable;
       calcLine.textContent = result;
       span.textContent = sign;
-      operand = operations[target.value]['operand'];
+      operand = operations[putValue]['operand'];
       arrInput = [];
     };
   };
 
-  if(target.value === 'equals'){
+  if(putValue === 'equals'){
     trouble.textContent = '';
     if(arrInput.length === 0) variable = result;
     if(operand === 'sum') result = result + variable;
@@ -102,7 +98,7 @@ buttonBlock.addEventListener('click', (event) => {
     arrInput = [];
   };
 
-  if(target.value === 'clear'){
+  if(putValue === 'clear'){
     arrInput = [];
     result = 0;
     variable = 0;
@@ -112,4 +108,46 @@ buttonBlock.addEventListener('click', (event) => {
     trouble.textContent = '';
     span.textContent = '';
   };
+}
+
+buttonBlock.addEventListener('click', (event) => {
+  let oneClick = event.target.id;
+  calculate(oneClick);
 });
+
+window.addEventListener('keyup', (event) => {
+  let pressKey = event.key;
+  let getKey = ''
+  switch(pressKey){
+    case '+':
+      getKey = 'add';
+      break;
+    case '-':
+      getKey = 'subtract';
+      break;
+    case '*':
+      getKey = 'multiply';
+      break;
+    case '/':
+      getKey = 'divide';
+      break;
+    case '=':
+    case 'Enter':
+      getKey = 'equals';
+      break;
+    case '.':
+      getKey = 'dot';
+      break;
+    case '\\':
+      getKey = 'mark';
+      break;
+    case 'Delete':
+      getKey = 'clear';
+      break;
+    default:
+      getKey = event.key;
+  };
+  calculate(getKey);
+});
+
+
