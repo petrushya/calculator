@@ -27,40 +27,37 @@ h1{
   box-shadow: inset 0 0 0.5rem #fff;
 }
 .calcWindow{
-  flex: 0 0 4rem;
+  flex: 0 0 5rem;
   display: flex;
   flex-flow: column wrap;
   justify-content: space-between;
   align-items: end;
   font-family: monospace;
   inline-size: 29.5rem;
-  block-size: 4rem;
   margin-bottom: 0.5rem;
-  padding: 0.3125rem;
-  overflow-x: auto;
   border: thin solid #000080;
   border-radius: 0.25rem;
   box-shadow: 0 0 0.5rem #fff;
   background-color: #98fb98;
 }
 .trouble{
-  font-size: 1rem;
+  display: block;
+  inline-size: calc(100% - 1rem);
+  block-size: 1lh;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  padding: 0.3125rem 0.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
-  color: darkred;
+  text-align: right;
+  background-color: #90ee90;
+  color: #00000085;
 }
 .calcLine{
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-end;
-  font-size: 2rem;
+  display: block;
+  font-size: 2.1rem;
   block-size: 1lh;
-}
-.calcLine span{
-  display: inline-block;
-  inline-size: 1.5rem;
-  margin-left: 0.125rem;
-  text-align: center;
-  background-color: #90ee90;
+  padding: 0 0.3125rem;
 }
 .buttonBlock{
   display: flex;

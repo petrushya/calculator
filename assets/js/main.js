@@ -1,42 +1,43 @@
 
 const buttonBlock = document.querySelector('.buttonBlock');
-const calcLine = document.querySelector('.calcLine p');
+const calcLine = document.querySelector('.calcLine');
 const trouble = document.querySelector('.trouble');
-const span = document.querySelector('.calcLine span');
 
 let arrInput = [];
 let operand = '';
 let result = 0;
 let variable = 0;
 let sign = '';
-const operations = {add: {operand: 'sum', sign: '+'},
-                    subtract: {operand: 'diff', sign: '-'},
-                    multiply: {operand: 'mult', sign: '*'},
-                    divide: {operand: 'divd', sign: '/'}
-                   };
+const operations = {add: '+', subtract: '-', multiply: '*', divide: '/'};
+const namberCase = '0123456789';
 
-function calculate(putValue) {
-  if(Number.isInteger(+putValue)){
-    span.setAttribute('style', 'color:#00000050;');
-    if(operand === 'divd' && arrInput.length === 0 && putValue === '0') {
-      trouble.textContent = 'You can\'t divide by "0" ';
+function counting(qualifier, resValue, varValue) {
+  if(qualifier === 'add') return resValue + varValue;
+  if(qualifier === 'subtract') return resValue - varValue;
+  if(qualifier === 'multiply') return resValue * varValue;
+  if(qualifier === 'divide') return resValue / varValue;
+  if(qualifier === '') return resValue;
+}
+
+function calculate(inputValue) {
+
+  const calcValue = parseFloat(arrInput.join(''));
+  const inputValueNamber = inputValue.split('').filter((character) => namberCase.includes(character)).join('');
+  if(inputValueNamber !== ''){
+    if(inputValueNamber === '0'){
+      if(!Number.isInteger(calcValue) || calcValue !== 0 || (arrInput.includes('.') && arrInput.length < 21)) arrInput.push(inputValueNamber);
     }else{
-      trouble.textContent = '';
-    };
-    if(putValue === '0'){
-      if((((arrInput.length === 0 && arrInput.join('') !== '0') || (arrInput.join('') === '-' && arrInput.join('') !== '-0')) || (arrInput.includes('.') && arrInput.length < 21) || arrInput[0] !== '0') && (arrInput.join('') !== '-0')) arrInput.push(putValue);
-    }else{
-      if((arrInput[0] === '0' && arrInput.length === 1) || (arrInput.length === 2 && arrInput.join('') === '-0')){
+      if(calcValue === 0 && !arrInput.includes('.')){
         arrInput.pop();
-        arrInput.push(putValue);
+        arrInput.push(inputValueNamber);
       }else if((arrInput.includes('.') && arrInput.length < 19) || !arrInput.includes('.')){
-        arrInput.push(putValue);
+        arrInput.push(inputValueNamber);
       };
     };
   };
 
-  if(putValue === 'dot') {
-    if(arrInput.length === 0 || arrInput.length === 1 && arrInput[0] === '-'){
+  if(inputValue === ('dot')) {
+    if(!Number.isInteger(calcValue)){
       arrInput.push('0');
       arrInput.push('.');
     }else if(!arrInput.includes('.')){
@@ -44,7 +45,7 @@ function calculate(putValue) {
     };
   };
 
-  if(putValue === 'mark'){
+  if(inputValue === ('mark')){
     if((arrInput[0] !== '-')){
       arrInput.unshift('-');
     }else if((arrInput[0] === '-')){
@@ -52,53 +53,78 @@ function calculate(putValue) {
     };
   };
 
-  if(putValue === 'Backspace') arrInput.pop();
+  if(inputValue.toLowerCase() === 'backspace'){
+    if(arrInput.length === 0){
+      operand = '';
+      sign = '';
+      trouble.textContent = `${result} ${sign}`;
+      calcLine.textContent = `${result} ${sign}`;
+      trouble.removeAttribute('style');
+    }else{
+      arrInput.pop();
+      calcLine.textContent = `${result}`;
+    };
+  };
 
   variable = parseFloat(arrInput.join(''));
 
+  if(operand === 'divide' && (arrInput.length === 0 || variable === 0 || variable === -0)){
+      trouble.textContent = 'You can\'t divide by "0"';
+      trouble.style.color = '#8b0000';
+    }else if(result && operand !== ''){
+      trouble.removeAttribute('style');
+      trouble.textContent = `${result} ${sign}`;
+    };
+
   if(arrInput.length > 18 || (arrInput.includes('.') && arrInput.length === variable.length)){
     calcLine.textContent = variable;
-  }else{
+  }else if(arrInput.length !== 0){
     calcLine.textContent = arrInput.join('');
+  }else if(arrInput.length === 0 && result){
+    calcLine.textContent = `${result}${sign}`;
   };
 
-  if(Object.keys(operations).includes(putValue)){
-    trouble.textContent = '';
-    span.removeAttribute('style');
-    sign = operations[putValue]['sign'];
-    if(arrInput.length === 0) variable = result;
-    if(operand){
-      if(operand === 'sum') result = result + variable;
-      if(operand === 'diff') result = result - variable;
-      if(operand === 'mult') result = result * variable;
-      if(operand === 'divd') result = result / variable;
-      calcLine.textContent = result;
-      span.textContent = sign;
-      operand = operations[putValue]['operand'];
-      arrInput = [];
+  if(Object.keys(operations).includes(inputValue.toLowerCase())){
+    sign = operations[inputValue.toLowerCase()];
+    if(operand === 'divide' && (variable === 0 || variable === -0)){
+      trouble.textContent = 'Incorrect denominator.';
     }else{
-      result = variable;
-      calcLine.textContent = result;
-      span.textContent = sign;
-      operand = operations[putValue]['operand'];
+      if(arrInput.length === 0) variable = result;
+      if(operand){
+        result = counting(operand, result, variable);
+        calcLine.textContent = result;
+        trouble.textContent = `${result} ${sign}`;
+        operand = inputValue.toLowerCase();
+        arrInput = [];
+      }else{
+        if(result){
+          trouble.textContent = `${result} ${sign}`;
+        }else{
+          trouble.textContent = `${sign}`;
+        };
+        result = variable;
+        calcLine.textContent = `${result}`;
+        operand = inputValue.toLowerCase();
+        arrInput = [];
+      };
+    };
+  };
+
+  if(inputValue === 'equal'){
+    if(operand === 'divide' && (variable === 0 || variable === -0)){
+      trouble.textContent = 'Incorrect denominator.';
+    }else{
+      if(arrInput.length === 0) variable = result;
+      result = counting(operand, result, variable);
+      calcLine.textContent = `${result}`;
+      trouble.textContent = '';
+      sign = '';
+      operand = '';
       arrInput = [];
     };
   };
 
-  if(putValue === 'equals'){
-    trouble.textContent = '';
-    if(arrInput.length === 0) variable = result;
-    if(operand === 'sum') result = result + variable;
-    if(operand === 'diff') result = result - variable;
-    if(operand === 'mult') result = result * variable;
-    if(operand === 'divd') result = result / variable;
-    calcLine.textContent = result;
-    span.textContent = '';
-    operand = '';
-    arrInput = [];
-  };
-
-  if(putValue === 'clear'){
+  if(inputValue === 'clear'){
     arrInput = [];
     result = 0;
     variable = 0;
@@ -106,9 +132,8 @@ function calculate(putValue) {
     sign = '';
     calcLine.textContent = '';
     trouble.textContent = '';
-    span.textContent = '';
   };
-}
+};
 
 buttonBlock.addEventListener('click', (event) => {
   let oneClick = event.target.id;
@@ -133,7 +158,7 @@ window.addEventListener('keyup', (event) => {
       break;
     case '=':
     case 'Enter':
-      getKey = 'equals';
+      getKey = 'equal';
       break;
     case '.':
       getKey = 'dot';
