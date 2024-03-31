@@ -97,12 +97,8 @@ function calculate(inputValue) {
         operand = inputValue.toLowerCase();
         arrInput = [];
       }else{
-        if(result){
-          trouble.textContent = `${result} ${sign}`;
-        }else{
-          trouble.textContent = `${sign}`;
-        };
         result = variable;
+        trouble.textContent = `${result} ${sign}`;
         calcLine.textContent = `${result}`;
         operand = inputValue.toLowerCase();
         arrInput = [];
