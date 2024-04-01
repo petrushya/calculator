@@ -46,11 +46,7 @@ function calculate(inputValue) {
   };
 
   if(inputValue === ('mark')){
-    if((arrInput[0] !== '-')){
-      arrInput.unshift('-');
-    }else if((arrInput[0] === '-')){
-      arrInput.shift();
-    };
+    arrInput.join('').includes('-') ? arrInput.shift() : arrInput.unshift('-');
   };
 
   if(inputValue.toLowerCase() === 'backspace'){
@@ -82,6 +78,8 @@ function calculate(inputValue) {
     calcLine.textContent = arrInput.join('');
   }else if(arrInput.length === 0 && result){
     calcLine.textContent = `${result}${sign}`;
+  }else{
+    calcLine.textContent = arrInput.join('');
   };
 
   if(Object.keys(operations).includes(inputValue.toLowerCase())){
